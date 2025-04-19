@@ -43,6 +43,10 @@ variable "igw_tags" {
 
 variable "public_subnet_cidr_block" {
     type=list
+    validation {
+      condition = length(var.public_subnet_cidr_block) == 2
+      error_message = "please enter minimum 2 cidr blocks "
+    }
   
 }
 
@@ -57,6 +61,10 @@ variable "public_subnet_tags" {
 
 variable "private_subnet_cidr_block" {
     type = list
+     validation {
+      condition = length(var.private_subnet_cidr_block) == 2
+      error_message = "please enter minimum 2 cidr blocks "
+    }
   
 }
 
@@ -69,6 +77,10 @@ variable "private_subnet_tags" {
 
 variable "database_subnet_cidr_block" {
     type = list
+     validation {
+      condition = length(var.database_subnet_cidr_block) == 2
+      error_message = "please enter minimum 2 cidr blocks "
+    }
   
 }
 variable "database_subnet_tags" {
@@ -97,6 +109,11 @@ variable "private_rt_tags" {
 
 variable "databse_rt_tags" {
 
+    type = map
+  
+}
+
+variable "database_Subnet_group_tags" {
     type = map
   
 }

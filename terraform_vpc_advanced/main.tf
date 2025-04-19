@@ -159,3 +159,38 @@ resource "aws_route" "database_route" {
   destination_cidr_block    = "0.0.0.0/0"
   nat_gateway_id = aws_nat_gateway.nat_gateway.id
 }
+
+# public route table association
+resource "aws_route_table_association" "public_rt_association" {
+  count = length(var.public_subnet_cidr_block)
+  subnet_id      = element(aws_subnet.public_subnet[*].id, count.index)
+  route_table_id = aws_route_table.pub_rt.id
+}
+
+# private route table association
+resource "aws_route_table_association" "private_rt_association" {
+  count = length(var.private_subnet_cidr_block)
+  subnet_id      = element(aws_subnet.private_subnet[*].id, count.index)
+  route_table_id = aws_route_table.private_rt.id
+}
+
+# database route table association
+resource "aws_route_table_association" "database_rt_association" {
+  count = length(var.database_subnet_cidr_block)
+  subnet_id      = element(aws_subnet.database_subnet[*].id, count.index)
+  route_table_id = aws_route_table.database_rt.id
+}
+
+
+resource "aws_db_subnet_group" "roboshop" {
+  name       = "${var.project_name}-${var.env}"
+  subnet_ids = aws_subnet.database_subnet[*].id
+
+    tags = merge(
+    var.var.common_tags,
+    {
+      Name = "${var.project_name}-${var.env}"
+    },
+    var.database_Subnet_group_tags
+  )
+}
